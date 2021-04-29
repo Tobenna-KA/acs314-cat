@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_ticket"
+        android:name="com.tobey.catapp.ui.tickets.TicketFragment"
+        android:label="@string/tickets"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
         android:id="@+id/nav_gallery"
         android:name="com.tobey.catapp.ui.gallery.HistoryFragment"
         android:label="@string/menu_history"

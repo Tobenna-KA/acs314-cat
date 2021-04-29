@@ -17,7 +17,7 @@
             android:id="@+id/imageView2"
             android:layout_width="418dp"
             android:layout_height="334dp"
-            app:srcCompat="@drawable/train"/>
+            app:srcCompat="@drawable/train1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -58,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:inputType="textPassword"
                 />
         </LinearLayout>
 
@@ -65,7 +66,8 @@
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login" />
+            android:text="Login"
+            />
 
 
         <LinearLayout

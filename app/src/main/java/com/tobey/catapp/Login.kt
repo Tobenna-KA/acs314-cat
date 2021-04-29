@@ -2,15 +2,13 @@ package com.tobey.catapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.json.JSONObject
@@ -19,9 +17,22 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class Login : AppCompatActivity() {
+    lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+
+        sharedPreferences = getSharedPreferences("myData", MODE_PRIVATE)
+        val user = sharedPreferences.getString("user", "")
+
+        Log.d("phoneNumber", "phoneNumber")
+        Log.d("phoneNumber", user.toString())
+        if (user == "") {
+            setContentView(R.layout.activity_login)
+        } else {
+            return startActivity(Intent(this, MainActivity::class.java))
+        }
+
 
 
         val signUpBtn: TextView = findViewById(R.id.sign_btn)
@@ -50,6 +61,8 @@ class Login : AppCompatActivity() {
             private val cont: Context = context
             var phone = ""
             var password = ""
+            fun Context.toast(message: CharSequence) =
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
             override fun onPreExecute() {
                 super.onPreExecute()
@@ -58,7 +71,7 @@ class Login : AppCompatActivity() {
                 progressBar.isIndeterminate=true
                 progressBar.visibility = View.VISIBLE
                 builder .appendQueryParameter("phone_number", phone)
-                builder .appendQueryParameter("password", "0000")
+                builder .appendQueryParameter("password", password)
                 builder .appendQueryParameter("key", "oooo")
             }
 
@@ -86,10 +99,15 @@ class Login : AppCompatActivity() {
                 } catch (e: java.lang.Exception) {
                     Log.e("Fail 2", e.toString())
                 }
-                fun onPostExecute(result: String?) {
-                    super.onPostExecute(result)
 
-                    var json_data = JSONObject(resulta)
+                return null;
+            }
+
+            override fun onPostExecute(result: String?) {
+                super.onPostExecute(result)
+
+                try {
+                    val json_data = JSONObject(resulta)
                     val code: Int = json_data.getInt("code")
 
                     if (code == 1) {
@@ -97,12 +115,19 @@ class Login : AppCompatActivity() {
 //                        val comObject = com[0] as JSONObject
 //                        Log.e("data",""+comObject.optString("fname"))
                         val toMain = Intent(cont, MainActivity::class.java)
+
+//                        val toTickets = Intent(cont, AllTickets::class.java)
+                        val sharedPreferences = cont.getSharedPreferences("myData", MODE_PRIVATE)
+                        sharedPreferences.edit().putString("user", json_data.getJSONArray("name")[0].toString()).apply()
+
                         Log.e("data",code.toString())
                         cont.startActivity(toMain)
+                    } else {
+                       cont.toast("Incorrect Password/Email")
                     }
+                } catch (e: Exception) {
+                    Log.d("Exception", e.toString());
                 }
-
-                return null;
             }
         }
 
